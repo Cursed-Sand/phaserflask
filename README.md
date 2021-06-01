@@ -12,4 +12,4 @@ Hex based RPG.
 # Versions
 ## 0.0
 - Setup repo and readme structure.
-- 
+- Setup git remote and validate local environment (T)
