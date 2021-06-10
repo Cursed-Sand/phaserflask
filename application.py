@@ -10,7 +10,7 @@ app.config.from_pyfile('settings/development.conf')
 
 
 # Configure Heroku Postgres database
-db = SQL(os.environ.get('DATABASE_URL').replace("://", "ql://", 1))
+db = SQL(os.getenv('DATABASE_URL'))
 
 
 @app.route("/", methods=['GET'])
