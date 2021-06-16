@@ -1,12 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <title>PhaserGame</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
-	<script src="{{ url_for('static', filename='js/phaser.min.js') }}"></script>
-	<script src="{{ url_for('static', filename='js/game.js') }}"></script>
-</head>
+	<head>
+		<title>PhaserGame</title>
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
+		<script src="{{ url_for('static', filename='js/phaser.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/game.js') }}"></script>
+	</head>
 <body>
+	<nav>
+		TODO NAVBAR
+	</nav>
+
+  {% if get_flashed_messages() %}
+  <header>
+      <div class="alert alert-primary border text-center" role="alert">
+          {{ get_flashed_messages() | join(" ") }}
+      </div>
+  </header>
+  {% endif %}
+  {% block main %}{% endblock %}
+  
+  
+  
   {% block content %}{% endblock %}
 </body>
 </html>
