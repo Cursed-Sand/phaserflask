@@ -3,13 +3,11 @@
 	<head>
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
 
+		<script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
 
 		<!-- one of these stupid things made the double block -->
 		<!-- <script src="{{ url_for('static', filename='js/phaser.min.js') }}"></script>
 		<script src="{{ url_for('static', filename='js/game.js') }}"></script> -->
-
-
-		<script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
 
 		<title>{% block title %}{% endblock %}Cursed Sand</title>
 	</head>
@@ -27,11 +25,12 @@
 	{% endif %}
 
 	{% block main %}
-	{% endblock %}
+	{% endblock %}	
 
 	<footer class="small text-center text-muted">
 		developed by <a href="https://www.mike.church">Mike Church</a> & <a href="https://www.turkosaur.us">Turkosaurus</a> 
 	</footer>
-	<footer><br></footer>    
+	<!-- <footer><br></footer>     -->
 </body>
+
 </html>
