@@ -74,12 +74,16 @@ def admin_get():
 
 @app.route("/admin/<task>", methods=['GET', 'POST'])
 def admin(task):    
+
     if request.method == 'GET':
         return render_template('admin.html')
 
+
     # On POST
     else:
-        if task == "db_setup":
+        print(f'POST task: {task}')
+
+        if task == 'db_setup':
             # Create table: users
             db.execute("CREATE TABLE IF NOT EXISTS users ( \
                 id serial PRIMARY KEY NOT NULL, \
@@ -88,6 +92,8 @@ def admin(task):
                 created_on TIMESTAMP, \
                 last_login TIMESTAMP \
                 )")
+
+        flash("Tables Setup!")
         return render_template('admin.html')
 
 # ADMINISTRATIVE #
