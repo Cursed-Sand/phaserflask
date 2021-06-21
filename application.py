@@ -25,9 +25,10 @@ def summary():
 def game():
     return render_template('game.html')
 
-@app.route("/character", methods=['GET'])
+@app.route("/character", methods=['GET', 'POST'])
 def character():
     return render_template('character.html')
+
 
 
 @app.route("/test", methods=['GET'])
@@ -65,12 +66,28 @@ def test():
 
     return 'HELLO TEST'
 
-@app.route("/db", methods=['GET'])
-def db():
-    
-    return 'HELLO db'
 
+@app.route("/admin", methods=['GET'])
+def admin_get():
+    return render_template('admin.html')   
 
+@app.route("/admin/<task>", methods=['GET', 'POST'])
+def admin(task):    
+    if request.method == 'GET':
+        return render_template('admin.html')
+
+    # On POST
+    else:
+        if task == db_setup:
+            # Create table: users
+            db.execute("CREATE TABLE IF NOT EXISTS users ( \
+                id serial PRIMARY KEY NOT NULL, \
+                username VARCHAR ( 255 ) UNIQUE NOT NULL, \
+                password VARCHAR ( 255 ) NOT NULL, \
+                created_on TIMESTAMP, \
+                last_login TIMESTAMP \
+                )")
+        return render_template('admin.html')
 
 # ADMINISTRATIVE #
 
