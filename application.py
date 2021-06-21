@@ -15,11 +15,19 @@ db = SQL(os.getenv('DATABASE_URL'))
 
 @app.route("/", methods=['GET'])
 def index():
-    return render_template('layout.html')
+    return render_template('index.html')
 
 @app.route("/summary", methods=['GET'])
 def summary():
     return render_template('summary.html')
+
+@app.route("/game", methods=['GET'])
+def game():
+    return render_template('game.html')
+
+@app.route("/character", methods=['GET'])
+def character():
+    return render_template('character.html')
 
 
 @app.route("/test", methods=['GET'])
