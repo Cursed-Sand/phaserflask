@@ -1,4 +1,5 @@
 import os
+import cs50
 # import psycopg2
 
 from flask import Flask, redirect, render_template, request, session, url_for, flash
@@ -78,7 +79,7 @@ def admin(task):
 
     # On POST
     else:
-        if task == db_setup:
+        if task == "db_setup":
             # Create table: users
             db.execute("CREATE TABLE IF NOT EXISTS users ( \
                 id serial PRIMARY KEY NOT NULL, \
