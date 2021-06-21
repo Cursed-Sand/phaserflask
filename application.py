@@ -78,7 +78,7 @@ def admin(task):
 
     # On POST
     else:
-        if task == db_setup:
+        if task == 'db_setup':
             # Create table: users
             db.execute("CREATE TABLE IF NOT EXISTS users ( \
                 id serial PRIMARY KEY NOT NULL, \
