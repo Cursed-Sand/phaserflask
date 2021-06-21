@@ -15,7 +15,7 @@ db = SQL(os.getenv('DATABASE_URL'))
 
 @app.route("/", methods=['GET'])
 def index():
-    return render_template('index.html')
+    return render_template('layout.html')
 
 
 @app.route("/test", methods=['GET'])
