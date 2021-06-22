@@ -1,4 +1,5 @@
 import os
+import cs50
 # import psycopg2
 
 from flask import Flask, redirect, render_template, request, session, url_for, flash

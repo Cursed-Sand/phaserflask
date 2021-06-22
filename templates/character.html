@@ -6,23 +6,23 @@ Character |
 
 {% block main %}
     <main>
-        <form>
+        <form action="/character" method="post">
             <ul class="flex-outer">
             <li>
                 <label for="name">Character Name</label>
-                <input type="text" id="first-name" placeholder="Enter character name.">
+                <input type="text" name= "name" id="name" placeholder="Enter character name.">
             </li>
             <li>
                 <label for="class">Character Class</label>
-                <input type="text" id="last-name" placeholder="Enter character class.">
+                <input type="text" name="class" id="class" placeholder="Enter character class.">
             </li>
             <li>
-                <label for="strength">strength</label>
-                <input type="text" id="strength" placeholder="Character strengths.">
+                <label for="strength">Strength</label>
+                <input type="text" name="strength" id="strength" placeholder="Character strengths.">
             </li>
             <li>
                 <label for="weakness">Weakness</label>
-                <input type="text" id="weakness" placeholder="Character weaknesses.">
+                <input type="text" name="weakness" id="weakness" placeholder="Character weaknesses.">
             </li>
             <li>
                 <label for="ao_1">Altered Object 1</label>
@@ -44,15 +44,12 @@ Character |
                           <input type="checkbox" id="lvl_1">
                           <label for="lvl_1">Level 1</label>
                         </li>
-                        li>
                           <input type="checkbox" id="lvl_2">
                           <label for="lvl_1">Level 1</label>
                         </li>
-                        li>
                           <input type="checkbox" id="lvl_3">
                           <label for="lvl_1">Level 1</label>
                         </li>
-                        li>
                           <input type="checkbox" id="lvl_4">
                           <label for="lvl_1">Level 1</label>
                         </li>
