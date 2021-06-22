@@ -1,5 +1,4 @@
 import os
-import cs50
 # import psycopg2
 
 from flask import Flask, redirect, render_template, request, session, url_for, flash
@@ -18,9 +17,9 @@ db = SQL(os.getenv('DATABASE_URL'))
 def index():
     return render_template('index.html')
 
-@app.route("/summary", methods=['GET'])
-def summary():
-    return render_template('summary.html')
+@app.route("/rules", methods=['GET'])
+def rules():
+    return render_template('rules.html')
 
 @app.route("/game", methods=['GET'])
 def game():
@@ -89,7 +88,10 @@ def admin(task):
         print(f'POST task: {task}')
 
         if task == 'db_setup':
-            # Create table: users
+
+            # CREATE TABLES
+
+            # users
             db.execute("CREATE TABLE IF NOT EXISTS users ( \
                 id serial PRIMARY KEY NOT NULL, \
                 username VARCHAR ( 255 ) UNIQUE NOT NULL, \
@@ -98,7 +100,15 @@ def admin(task):
                 last_login TIMESTAMP \
                 )")
 
+            # cards
+                # "primary action, secondary, tertertiary"
+
+            # 
+
+
+
         flash("Tables Setup!")
+
         return render_template('admin.html')
 
 # ADMINISTRATIVE #
