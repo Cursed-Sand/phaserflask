@@ -27,7 +27,12 @@ def game():
 
 @app.route("/character", methods=['GET', 'POST'])
 def character():
-    return render_template('character.html')
+    if request.method == 'GET':
+        return render_template('character.html')
+
+    # On POST
+    else:
+        return render_template('character.html')
 
 
 
@@ -144,6 +149,7 @@ def register():
         else:
             return render_template("error.html", errcode=403, errmsg="Username invalid or already taken.")
 
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
@@ -187,6 +193,7 @@ def login():
     # User reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template("login.html")
+
 
 @app.route("/logout")
 def logout():
