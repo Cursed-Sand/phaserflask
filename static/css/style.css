@@ -33,11 +33,18 @@ main {
   padding: 1rem;
 }
 
+footer {
+  margin-left: 5rem;
+  padding: 1rem;
+  text-align: center
+}
+
+
 .navbar {
   position: fixed;
   background-color: var(--bg-primary);
   transition: width 400ms ease;
-  overflow: scroll;
+  overflow: hidden;
 }
 
 .navbar-nav {
