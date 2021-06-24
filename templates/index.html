@@ -1,63 +1,56 @@
 {% extends "layout.html" %}
-{% block content %}
-<!DOCTYPE html>
-<html>
-<!-- <head>
-    <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
-</head> -->
-<body>
 
-    <script>
+{% block title %}
+About |
+{% endblock %}
 
-    var config = {
-        type: Phaser.AUTO,
-        width: 800,
-        height: 600,
-        physics: {
-            default: 'arcade',
-            arcade: {
-                gravity: { y: 200 }
-            }
-        },
-        scene: {
-            preload: preload,
-            create: create
-        }
-    };
+{% block main %}
+<main>
+    <h1>Summary</h1>
+    <p>
+        End goal will be a physical game with a virtual option.  You should receive a download code for the virtual option should you purchase the physical version. The digital version should also be able to be shared with up to whatever the maximum number of players ends up being. The license holder pays for the game, then players are able to  play for free, just like any board game or TTRPG would work.
+    </p>
 
-    var game = new Phaser.Game(config);
+    <h1>Sources</h1>
+    <ul>
+        <li>
+            Navbar: 
+            <a href=https://www.youtube.com/watch?v=biOMz4puGt8>
+                Fireship
+            </a>
+        </li>
+        <li>
+            Icons: 
+            <a href=https://fontawesome.com/>
+                Font Awesome
+            </a>
+        </li>
+        <li>
+            Thing: 
+            <a href=>
+                #
+            </a>
+        </li>
 
-    function preload ()
-    {
-        this.load.setBaseURL('http://labs.phaser.io');
 
-        this.load.image('sky', 'assets/skies/space3.png');
-        this.load.image('logo', 'assets/sprites/phaser3-logo.png');
-        this.load.image('red', 'assets/particles/red.png');
-    }
+        <!-- Template -->
+        <!-- <li>
+            Thing: 
+            <a href=>
+                #
+            </a>
+        </li> -->
+    </ul>
 
-    function create ()
-    {
-        this.add.image(400, 300, 'sky');
+    <h1>Credits</h1>
+    <ul>
+        <li>Story</li>
+        <li>Project Management</li>
+        <li>Game Design</li>
+        <li>Database</li>
+        <li>Quality Assurance</li>
+        <li>Play Test</li>
+    </ul>
 
-        var particles = this.add.particles('red');
-
-        var emitter = particles.createEmitter({
-            speed: 100,
-            scale: { start: 1, end: 0 },
-            blendMode: 'ADD'
-        });
-
-        var logo = this.physics.add.image(400, 100, 'logo');
-
-        logo.setVelocity(100, 200);
-        logo.setBounce(1, 1);
-        logo.setCollideWorldBounds(true);
-
-        emitter.startFollow(logo);
-    }
-    </script>
-
-</body>
-</html>
+</main>
 {% endblock %}
