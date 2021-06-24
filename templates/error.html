@@ -1,3 +1,42 @@
-<h1>
-    {{ errcode }} - {{ errmsg }}
-</h1>
+{% extends "layout.html" %}
+
+{% block title %}
+Character |
+{% endblock %}
+
+{% block main %}
+<main>
+    <h1>
+        {{ errcode }} - {{ errmsg }}
+    </h1>
+
+
+    <!-- Feedback -->
+    <h2>
+        Feedback
+    </h2>
+
+    <p>
+        Tell us what went wrong, and give us permission to collect informtaion to fix it.
+    </p>
+
+    <form>
+
+        <label for="lvl_1">Username</label>
+        <input type="checkbox" id="username" checked>
+
+        <label for="lvl_1">Timestamp</label>
+        <input type="checkbox" id="timestamp" checked>
+
+        <label for="lvl_1">Activity</label>
+        <input type="checkbox" id="timestamp" checked>
+        <small>Only most recent actions at time of error.</small>
+
+        <label for="">What went wrong?</label>
+        <input type="text" name="feedbacktext" id="feedbacktext" placeholder="How can we fix it?">
+
+        <!-- <label for=""></label>
+        <input type="text" name="" id="" placeholder=""> -->
+        </form>
+</main>
+{% endblock %}
