@@ -6,16 +6,21 @@ Character |
 
 {% block main %}
 <main>
+    {% if errcode %}
     <h1>
-        {{ errcode }} - {{ errmsg }}
+        Error {{ errcode }}
     </h1>
+    <h2>
+        {{ errmsg }}
+    </h2>
+    {% else %}
+    <h1>
+        Feedback
+    </h1>
+    {% endif %}
 
 
     <!-- Feedback -->
-    <h2>
-        Feedback
-    </h2>
-
     <p>
         Tell us what went wrong, and give us permission to collect informtaion to fix it.
     </p>
@@ -37,6 +42,8 @@ Character |
 
         <!-- <label for=""></label>
         <input type="text" name="" id="" placeholder=""> -->
-        </form>
+
+    </form>
+
 </main>
 {% endblock %}
