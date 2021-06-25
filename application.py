@@ -32,6 +32,20 @@ def character():
 
     # On POST
     else:
+        charname = request.form.get("name")
+        charclass = request.form.get("class")
+        strength = request.form.get("strength")
+        weakness = request.form.get("weakness")
+        ao_1 = request.form.get("ao_1")
+        ao_2 = request.form.get("ao_2")
+        ao_3 = request.form.get("ao_3")
+        lvl_1 = request.form.get("lvl_1")
+        lvl_2 = request.form.get("lvl_2")
+        lvl_3 = request.form.get("lvl_3")
+        lvl_4 = request.form.get("lvl_4")
+        print(f"captured:{charname}, {charclass}, {strength}, {weakness}, {ao_1}, {lvl_1}")
+
+        flash(f"Received {charname} stats.")
         return render_template('character.html')
 
 
