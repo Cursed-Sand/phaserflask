@@ -29,5 +29,12 @@ Admin |
             <button class="btn btn-primary" id='setupdb' type="submit">Import templates</button>
         </form>
     </div>
+
+    <h2>Cards</h2>
+        <ul>
+            {% for card in cards %}
+                <li>{{ card.card }} of {{ card.suit }}: {{ card.text }}</li>
+            {% endfor %}
+        </ul>
 </main>
 {% endblock %}

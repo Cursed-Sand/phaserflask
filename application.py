@@ -88,7 +88,8 @@ def test():
 
 @app.route("/admin", methods=['GET'])
 def admin_get():
-    return render_template('admin.html')   
+    cards = db.execute("SELECT * FROM cards")
+    return render_template('admin.html', cards=cards)   
 
 @app.route("/admin/<task>", methods=['GET', 'POST'])
 def admin(task):    
@@ -131,7 +132,7 @@ def admin(task):
 
                 flash(f"Templates setup sucessfully!")
 
-                return render_template('admin.html')
+                return redirect('/admin')
 
         # Setup DB
         if task == 'db_setup':
