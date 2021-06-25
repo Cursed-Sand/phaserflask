@@ -1,5 +1,5 @@
 import os
-# import psycopg2
+import csv
 
 from flask import Flask, redirect, render_template, request, session, url_for, flash
 from livereload import Server
@@ -101,6 +101,39 @@ def admin(task):
     else:
         print(f'POST task: {task}')
 
+        # Import Templates
+        if task == 'template_setup':
+            with open('static/templates/cards.csv', 'r') as csvfile:
+
+                print('Reading cards.csv...')
+                csv_reader = csv.reader(csvfile)
+
+                print('Creating new database...')
+                db.execute("CREATE TABLE IF NOT EXISTS cards ( \
+                    suit VARCHAR (255), \
+                    card VARCHAR (255), \
+                    number INTEGER, \
+                    symbol VARCHAR (255), \
+                    text VARCHAR (4096) \
+                    )")
+
+                db.execute("DELETE from cards")
+
+                print('Extracting data...')
+
+                # Skips headers
+                next(csv_reader)
+                for row in csv_reader:
+                    
+                    print(f"Adding the {row[1]} of {row[0]}")
+                    db.execute("INSERT INTO cards (suit, card, number, symbol, text) VALUES (:suit, :card, :number, :symbol, :text)", \
+                                    suit=row[0], card=row[1], number=row[2], symbol=row[3], text=row[4])
+
+                flash(f"Templates setup sucessfully!")
+
+                return render_template('admin.html')
+
+        # Setup DB
         if task == 'db_setup':
 
             # CREATE TABLES
@@ -127,8 +160,9 @@ def admin(task):
 
 # ADMINISTRATIVE #
 
-@app.route("/error", methods=["GET"])
+@app.route("/error", methods=["GET", "POST"])
 def error():
+    #TODO make get and post route
     return render_template('error.html')
 
 @app.route("/register", methods=["GET", "POST"])
