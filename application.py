@@ -5,6 +5,7 @@ import csv
 from flask import Flask, redirect, render_template, request, session, url_for, flash
 from livereload import Server
 from cs50 import SQL
+from functools import wraps
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -18,6 +19,27 @@ db = SQL(os.getenv('DATABASE_URL'))
 
 
 ## Helper Functions ##
+
+# Ensure responses aren't cached
+@app.after_request
+def after_request(response):
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Expires"] = 0
+    response.headers["Pragma"] = "no-cache"
+    return response
+
+# Require login to a route
+def login_required(f):
+    """
+    Decorate routes to require login.
+    http://flask.pocoo.org/docs/1.0/patterns/viewdecorators/
+    """
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session.get("user_id") is None:
+            return redirect("/welcome")
+        return f(*args, **kwargs)
+    return decorated_function
 
 # Log error
 def log_error(errcode, errmsg):
@@ -38,28 +60,55 @@ def log_feedback(feedback):
                 WHERE id=:last_error", user_id=session['user_id'], feedback=feedback, last_error=last_error)
 
 
-
-@app.route("/", methods=['GET'])
+@app.route("/", methods=['GET', 'POST'])
+@login_required
 def index():
-    return render_template('index.html')
+
+    if request.method == 'GET':
+        username = db.execute("SELECT username FROM users WHERE id=:id", id=session['user_id'])
+
+        friends = db.execute("SELECT username FROM users WHERE id=( \
+                                SELECT inviter FROM friends WHERE accept='true' AND invitee=:id) \
+                                OR id=( \
+                                SELECT invitee FROM friends WHERE accept='true' AND inviter=:id) \
+                                ", id=session['user_id'])
+        print(friends)
+
+        campaigns = db.execute("SELECT * FROM campaigns")
+
+        return render_template('index.html', username=username, friends=friends, campaigns=campaigns)
+
+    else:
+
+        return "testing"
+
+@app.route("/welcome", methods=['GET'])
+def welcome():
+    return render_template('welcome.html')
 
 @app.route("/rules", methods=['GET'])
 def rules():
-    return render_template('rules.html')
+
+    classes = db.execute("SELECT * FROM classes")
+    return render_template('rules.html', classes=classes)
 
 @app.route("/pregame", methods=['GET'])
+@login_required
 def pregame():
     return render_template('pregame.html')
 
 @app.route("/game", methods=['GET'])
+@login_required
 def game():
     return render_template('game.html')
 
 @app.route("/phaser", methods=['GET'])
+@login_required
 def phaser():
     return render_template('phaser.html')
 
 @app.route("/character", methods=['GET', 'POST'])
+@login_required
 def character():
     if request.method == 'GET':
         characters = db.execute("SELECT * FROM characters")
@@ -92,18 +141,19 @@ def character():
 
         return render_template('character.html', characters=characters, abilities=abilities, classes=classes)
 
-
 @app.route("/settings", methods=['GET'])
+@login_required
 def settings_get():
     return render_template('settings.html')   
 
-
 @app.route("/admin", methods=['GET'])
+@login_required
 def admin_get():
     cards = db.execute("SELECT * FROM cards")
     return render_template('admin.html', cards=cards)   
 
 @app.route("/admin/<task>", methods=['GET', 'POST'])
+@login_required
 def admin(task):    
 
     if request.method == 'GET':
@@ -302,7 +352,7 @@ def admin(task):
             db.execute("CREATE TABLE IF NOT EXISTS logs ( \
                 id serial PRIMARY KEY NOT NULL, \
                 campaign_id INTEGER REFERENCES campaigns ( id ), \
-                actor_character_id INTEGER REFERENCES character ( id ), \
+                actor_character_id INTEGER REFERENCES characters ( id ), \
                 action_id INTEGER REFERENCES actions ( id ), \
                 object_id INTEGER, \
                 time TIMESTAMP \
@@ -435,7 +485,7 @@ def login():
         db.execute("UPDATE users SET last_login=:time WHERE id=:id", time=time, id=session["user_id"])
 
         # Redirect user to home page
-        return redirect("/")
+        return redirect("/welcome")
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:
@@ -450,8 +500,7 @@ def logout():
     session.clear()
 
     # Redirect user to login form
-    return redirect("/")
-
+    return redirect("/welcome")
 
 
 if __name__ == "__main__":

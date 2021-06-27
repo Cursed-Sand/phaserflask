@@ -1,0 +1,120 @@
+{% extends "layout.html" %}
+
+{% block title %}
+About |
+{% endblock %}
+
+{% block main %}
+<main>
+
+    <div>
+        <h2>Login</h2>
+        <form action="/login" method="post">
+            <div class="form-group">
+                <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text">
+            </div>
+            <div class="form-group">
+                <input class="form-control" name="password" placeholder="Password" type="password">
+            </div>
+            <div class="row justify-content-center">
+                <button class="btn btn-primary" type="submit">Log In</button>
+            </div>
+            <small>Need an account? <a href="/register">Register Now</a></small>
+        </form>
+    </div>
+
+    <h1>Game Overview</h1>
+    <p>
+        Tabletop, procedurally generated role-playing game. End goal will be a physical game with a virtual option.  You should receive a download code for the virtual option should you purchase the physical version. The digital version should also be able to be shared with up to whatever the maximum number of players ends up being. The license holder pays for the game, then players are able to  play for free, just like any board game or TTRPG would work.
+    </p>
+    <h4>
+        <a href="/rules">
+            Checkout the full game rules.
+        </a>
+    </h4>
+
+    <h1>How It's Made</h1>
+    <table>
+        
+        <tr>
+            <td>
+                Framework
+            </td>
+            <td>
+                <a href="https://flask.palletsprojects.com/en/2.0.x/">
+                    Flask
+                </a>
+            </td>
+        </tr>
+        
+        <tr>
+            <td>
+                Database
+            </td>
+            <td>
+                <a href="https://www.postgresql.org/">
+                    PostgreSQL
+                </a>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Navbar
+            </td>
+            <td>
+                <a href="https://www.youtube.com/watch?v=biOMz4puGt8">
+                    Fireship
+                </a>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Icons
+            </td>
+            <td>
+                <a href="https://fontawesome.com/license">
+                    Font Awesome
+                </a>
+            </td>
+        </tr>
+
+        
+        <tr>
+            <td>
+                
+            </td>
+            <td>
+                
+            </td>
+        </tr>
+        
+        <!-- <tr>
+            <td>
+                
+            </td>
+            <td>
+                
+            </td>
+        </tr> -->
+        
+    </table>
+    <a href="https://github.com/Cursed-Sand">
+        <button>
+            View the Source Code
+        </button>
+    </a>
+    
+    <h1>Credits</h1>
+    <ul>
+        <li>Story</li>
+        <li>Game Design</li>
+        <li>Project Management</li>
+        <li>Database</li>
+        <li>Quality Assurance</li>
+        <li>Play Testers</li>
+    </ul>
+    
+</main>
+{% endblock %}
