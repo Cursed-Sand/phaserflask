@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Pregame |
+{% endblock %}
+
+{% block main %}
+<main>
+    <h1>Pregame</h1>
+
+    <div>
+        <h3>Party</h3>
+            <ul>
+                <!-- for member in party -->
+                    <li>
+
+                    </li>
+                    <li>
+                        Choose your character:
+                        <form>
+                            <select name="character" id="id">
+                                <!-- for class in classes -->
+                                    <option value="foo">
+                                        foo
+                                    </option>
+                            </select>
+                            <button type="submit">
+                                Choose Class
+                            </button>
+                        </form>
+                    </li>
+            </ul>
+    </div>
+    <a href="/game">
+        <button>
+            Go to Game
+        </button>
+    </a>
+</main>
+{% endblock %}

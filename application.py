@@ -48,9 +48,17 @@ def index():
 def rules():
     return render_template('rules.html')
 
+@app.route("/pregame", methods=['GET'])
+def pregame():
+    return render_template('pregame.html')
+
 @app.route("/game", methods=['GET'])
 def game():
     return render_template('game.html')
+
+@app.route("/phaser", methods=['GET'])
+def phaser():
+    return render_template('phaser.html')
 
 @app.route("/character", methods=['GET', 'POST'])
 def character():
@@ -85,6 +93,10 @@ def character():
 
         return render_template('character.html', characters=characters, abilities=abilities, classes=classes)
 
+
+@app.route("/settings", methods=['GET'])
+def settings_get():
+    return render_template('settings.html')   
 
 
 @app.route("/admin", methods=['GET'])
@@ -176,10 +188,8 @@ def admin(task):
 
             return redirect('/admin')
 
-        # Setup DB
+        #### CREATE TABLES ####
         if task == 'db_setup':
-
-            # CREATE TABLES #
 
             ## ADMIN ##
 
@@ -200,59 +210,69 @@ def admin(task):
                 password VARCHAR ( 255 ) NOT NULL, \
                 created_on TIMESTAMP, \
                 last_login TIMESTAMP, \
-                last_error INTEGER REFERENCES errors (id) \
+                last_error INTEGER REFERENCES errors ( id ) \
                 )")
 
+            # friends
+            db.execute("CREATE TABLE IF NOT EXISTS friends ( \
+                id serial PRIMARY KEY NOT NULL, \
+                inviter INTEGER REFERENCES users ( id ), \
+                invitee INTEGER REFERENCES users ( id ), \
+                accept BOOL, \
+                blocked BOOL \
+                )")
 
             ## GAME ##
 
             # campaigns
+            # status = (pregame || game || archive)
             db.execute("CREATE TABLE IF NOT EXISTS campaigns ( \
                 id serial PRIMARY KEY NOT NULL, \
-                name VARCHAR ( 255 ) \
-            )")
+                name VARCHAR ( 255 ), \
+                status VARCHAR ( 255 ) \
+                )")
 
             # parties
             db.execute("CREATE TABLE IF NOT EXISTS parties ( \
                 id serial PRIMARY KEY NOT NULL, \
-                campaign INTEGER REFERENCES campaigns ( id ), \
+                campaign_id INTEGER REFERENCES campaigns ( id ), \
                 user_id INTEGER REFERENCES users ( id ) \
-            )")
+                )")
 
             # classes
             db.execute("CREATE TABLE IF NOT EXISTS classes ( \
                 id serial PRIMARY KEY NOT NULL, \
                 name VARCHAR ( 255 ), \
                 description VARCHAR ( 255 ) \
-            )")
+                )")
 
             # abilities
             db.execute("CREATE TABLE IF NOT EXISTS abilities ( \
                 id serial PRIMARY KEY NOT NULL, \
                 name VARCHAR ( 255 ), \
                 description VARCHAR ( 255 ) \
-            )")
+                )")
 
             # locations
             db.execute("CREATE TABLE IF NOT EXISTS locations ( \
                 id serial PRIMARY KEY NOT NULL, \
                 name VARCHAR ( 255 ), \
                 description VARCHAR ( 255 ) \
-            )")
+                )")
 
             # encounters
             db.execute("CREATE TABLE IF NOT EXISTS encounters ( \
                 id serial PRIMARY KEY NOT NULL, \
                 name VARCHAR ( 255 ), \
                 description VARCHAR ( 255 ) \
-            )")
+                )")
 
             # objects
             db.execute("CREATE TABLE IF NOT EXISTS objects ( \
                 id serial PRIMARY KEY NOT NULL, \
                 name VARCHAR ( 255 ), \
                 effect VARCHAR ( 255 ) \
-            )")
+                )")
 
             # characters
             db.execute("CREATE TABLE IF NOT EXISTS characters ( \
@@ -269,8 +289,24 @@ def admin(task):
                 ao_1 INTEGER REFERENCES objects ( id ), \
                 ao_2 INTEGER REFERENCES objects ( id ), \
                 ao_3 INTEGER REFERENCES objects ( id ) \
-            )")
+                )")
 
+            # actions
+            db.execute("CREATE TABLE IF NOT EXISTS actions ( \
+                id serial PRIMARY KEY NOT NULL, \
+                name VARCHAR ( 255 ), \
+                description VARCHAR ( 4096 ) \
+                )")                
+
+            # logs
+            db.execute("CREATE TABLE IF NOT EXISTS logs ( \
+                id serial PRIMARY KEY NOT NULL, \
+                campaign_id INTEGER REFERENCES campaigns ( id ), \
+                actor_character_id INTEGER REFERENCES character ( id ), \
+                action_id INTEGER REFERENCES actions ( id ), \
+                object_id INTEGER, \
+                time TIMESTAMP \
+                )")
 
 
     # Characters
@@ -283,14 +319,14 @@ def admin(task):
         # id
         # name
         # description
-        # cantrip
+        # TODO cantrip
 
 
     # Abilities (52+2)
         # id
         # name
         # description
-        # pulled/drawn        
+        # pulled/drawn
 
 
         flash("Tables Setup!")
