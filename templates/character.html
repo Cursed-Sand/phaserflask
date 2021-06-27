@@ -94,7 +94,21 @@ Character |
         <h4>Characters</h4>
         <ul>
             {% for character in characters %}
-                <li>{{ character.name }}</li>
+                <li>
+                    <h6>
+                        {{ character.name }}
+                    </h6>
+                    {{ character.class }}
+                    {{ character.strength }}
+                    {{ character.weakness }}
+                    {{ character.ability_1 }}
+                    {{ character.ability_2 }}
+                    {{ character.ability_3 }}
+                    {{ character.ability_4 }}
+                    {{ character.ao_1 }}
+                    {{ character.ao_2 }}
+                    {{ character.ao_3 }}
+                </li>
             {% endfor %}
         </ul>
 </main>
