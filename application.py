@@ -39,7 +39,6 @@ def log_feedback(feedback):
 
 
 
-
 @app.route("/", methods=['GET'])
 def index():
     return render_template('index.html')
@@ -210,7 +209,8 @@ def admin(task):
                 password VARCHAR ( 255 ) NOT NULL, \
                 created_on TIMESTAMP, \
                 last_login TIMESTAMP, \
-                last_error INTEGER REFERENCES errors ( id ) \
+                last_error INTEGER REFERENCES errors ( id ), \
+                campaign_id INTEGER REFERENCES campaigns ( id ) \
                 )")
 
             # friends
