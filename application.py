@@ -55,7 +55,11 @@ def game():
 @app.route("/character", methods=['GET', 'POST'])
 def character():
     if request.method == 'GET':
-        return render_template('character.html')
+        characters = db.execute("SELECT * FROM characters")
+        abilities = db.execute("SELECT * FROM abilities")
+        classes = db.execute("SELECT * FROM classes")
+
+        return render_template('character.html', characters=characters, abilities=abilities, classes=classes)
 
     # On POST
     else:
@@ -77,9 +81,9 @@ def character():
         flash(f"Added {charname} into database.")
         characters = db.execute("SELECT * FROM characters")
         abilities = db.execute("SELECT * FROM abilities")
+        classes = db.execute("SELECT * FROM classes")
 
-
-        return render_template('character.html', characters=characters)
+        return render_template('character.html', characters=characters, abilities=abilities, classes=classes)
 
 
 

@@ -92,6 +92,13 @@ Character |
         </form>
 
         <h4>Characters</h4>
+        <h5>Choose a Class</h5>        
+        <select>
+            {% for class in classes %}
+            <option>{{ class.name }} - {{ class.description }}</option>
+            {% endfor %}
+        </select>
+
         <ul>
             {% for character in characters %}
                 <li>
