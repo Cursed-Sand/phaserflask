@@ -1,9 +1,13 @@
 import os
+import datetime
 import csv
 
 from flask import Flask, redirect, render_template, request, session, url_for, flash
 from livereload import Server
 from cs50 import SQL
+from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
+from werkzeug.security import check_password_hash, generate_password_hash
+
 
 app = Flask(__name__)
 app.config.from_pyfile('settings/development.conf')
@@ -11,6 +15,29 @@ app.secret_key = os.getenv('SECRET_KEY')
 
 # Configure Heroku Postgres database
 db = SQL(os.getenv('DATABASE_URL'))
+
+
+## Helper Functions ##
+
+# Log error
+def log_error(errcode, errmsg):
+    time = datetime.datetime.utcnow().isoformat()
+    error_pk = db.execute("INSERT INTO errors (errcode, errmsg, created_on) VALUES (:errcode, :errmsg, :time)", \
+        errcode=errcode, errmsg=errmsg, time=time)
+    
+    print(f"error_pk:{error_pk}")
+
+    db.execute("UPDATE users SET last_error=:error_pk WHERE id=:user_id", error_pk=error_pk, user_id=session['user_id'])
+
+de# Log feedback
+def log_feedback(user_id, feedback):
+    last_error = db.execute("SELECT last_error FROM users WHERE id=:user_id", user_id=session['user_id'])
+    last_error = last_error[0]['last_error']
+
+    db.execute("UPDATE errors SET user_id=:user_id, feedback=:feedback \
+                WHERE id=:last_error", user_id=session['user_id'], feedback=feedback, last_error=last_error)
+
+
 
 
 @app.route("/", methods=['GET'])
@@ -103,6 +130,10 @@ def admin(task):
         print(f'POST task: {task}')
 
         # Import Templates
+        if task == 'import_template':
+            foo = request.form.get("filename")
+            print(foo)
+
         if task == 'template_setup':
             with open('static/templates/cards.csv', 'r') as csvfile:
 
@@ -145,13 +176,25 @@ def admin(task):
                 username VARCHAR ( 255 ) UNIQUE NOT NULL, \
                 password VARCHAR ( 255 ) NOT NULL, \
                 created_on TIMESTAMP, \
-                last_login TIMESTAMP \
+                last_login TIMESTAMP, \
+                last_error INTEGER REFERENCES errors (id) \
                 )")
 
             # cards
                 # "primary action, secondary, tertertiary"
 
-            # 
+            # characters
+
+
+            # errors
+            db.execute("CREATE TABLE IF NOT EXISTS errors ( \
+                id serial PRIMARY KEY NOT NULL, \
+                errcode INTEGER, \
+                errmsg VARCHAR ( 4096 ), \
+                created_on TIMESTAMP, \
+                user_id integer REFERENCES users (id), \
+                feedback VARCHAR ( 4096 ) \
+                )")
 
 
 
@@ -163,8 +206,18 @@ def admin(task):
 
 @app.route("/error", methods=["GET", "POST"])
 def error():
-    #TODO make get and post route
+
+    # TODO remove this testing, implement better
+    # log_error(errcode, errmsg)
+    log_error(418, "I'm a teapot.")
+
+    # log_feedback(user_id, feedback)
+
+    log_feedback(session['user_id'], 'test feedback message')
+
     return render_template('error.html')
+
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -198,8 +251,8 @@ def register():
         username = request.form.get("username")
         hashedpass = generate_password_hash(request.form.get("password"))
 
-        if username not in authusers:
-            return render_template("error.html", errcode=403, errmsg="Unauthorized user.")
+        # if username not in authusers:
+        #     return render_template("error.html", errcode=403, errmsg="Unauthorized user.")
 
         # Check if username is already taken
         if not db.execute("SELECT username FROM users WHERE username LIKE (?)", username):
