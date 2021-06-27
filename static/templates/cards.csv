@@ -1,5 +1,5 @@
-SUITE,CARD,NUMBER,SYMBOL,TEXT,MAP,ENCOUNTER,ABILITY
-SPADES,ACE,37,Rapiers,"The rapiers warn us agains assaults which threaten and will occur sooner or later, acording to the distance from this person",,,
+SUITE,CARD,NUMBER,SYMBOL,TEXT,LOCATION,ENCOUNTER,OBJECT
+SPADES,ACE,37,Rapiers,"The rapiers warn us agains assaults which threaten and will occur sooner or later, acording to the distance from this person",foo,bar,bat
 SPADES,2,34,Star,"The star insures success in all enterprises when near; when very distant, some unlucky effects",,,
 SPADES,3,10,Pig,"The pig, whether near or far, is an omen of phenominal luck and great abundance, high honors, and all ambitions attained.",,,
 SPADES,4,49,Eyes,"The eye, when near, denotes great interest taken by friends; when distand, it signifies suspicion. ",,,

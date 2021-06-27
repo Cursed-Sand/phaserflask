@@ -90,5 +90,12 @@ Character |
             </li>
             </ul>
         </form>
+
+        <h4>Characters</h4>
+        <ul>
+            {% for character in characters %}
+                <li>{{ character.name }}</li>
+            {% endfor %}
+        </ul>
 </main>
 {% endblock %}

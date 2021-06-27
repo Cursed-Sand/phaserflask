@@ -72,45 +72,15 @@ def character():
         lvl_4 = request.form.get("lvl_4")
         print(f"captured:{charname}, {charclass}, {strength}, {weakness}, {ao_1}, {lvl_1}")
 
-        flash(f"Received {charname} stats.")
-        return render_template('character.html')
+        db.execute("INSERT INTO characters (name) VALUES (:name)", name=charname)
+
+        flash(f"Added {charname} into database.")
+        characters = db.execute("SELECT * FROM characters")
+        abilities = db.execute("SELECT * FROM abilities")
 
 
+        return render_template('character.html', characters=characters)
 
-@app.route("/test", methods=['GET'])
-def test():
-
-    # CREATE TABLES
-    # Users
-    db.execute("CREATE TABLE IF NOT EXISTS users ( \
-        id serial PRIMARY KEY NOT NULL, \
-        username VARCHAR ( 255 ) UNIQUE NOT NULL, \
-        password VARCHAR ( 255 ) NOT NULL, \
-        created_on TIMESTAMP, \
-        last_login TIMESTAMP \
-        )")
-
-    # Characters
-        # id
-        # name
-        # description
-        #         
-
-    # Classes
-        # id
-        # name
-        # description
-        # cantrip
-
-
-    # Abilities (52+2)
-        # id
-        # name
-        # description
-        # pulled/drawn        
-
-
-    return 'HELLO TEST'
 
 
 @app.route("/admin", methods=['GET'])
@@ -130,11 +100,15 @@ def admin(task):
         print(f'POST task: {task}')
 
         # Import Templates
+        # TODO get file import working
         if task == 'import_template':
             foo = request.form.get("filename")
             print(foo)
 
+        # Card & class template setup
         if task == 'template_setup':
+
+            # CARDS
             with open('static/templates/cards.csv', 'r') as csvfile:
 
                 print('Reading cards.csv...')
@@ -146,7 +120,10 @@ def admin(task):
                     card VARCHAR (255), \
                     number INTEGER, \
                     symbol VARCHAR (255), \
-                    text VARCHAR (4096) \
+                    text VARCHAR (4096), \
+                    location VARCHAR (4096), \
+                    encounter VARCHAR (4096), \
+                    object VARCHAR (4096) \
                     )")
 
                 db.execute("DELETE from cards")
@@ -158,33 +135,49 @@ def admin(task):
                 for row in csv_reader:
                     
                     print(f"Adding the {row[1]} of {row[0]}")
-                    db.execute("INSERT INTO cards (suit, card, number, symbol, text) VALUES (:suit, :card, :number, :symbol, :text)", \
-                                    suit=row[0], card=row[1], number=row[2], symbol=row[3], text=row[4])
+                    db.execute("INSERT INTO cards (suit, card, number, symbol, text, location, encounter, object) \
+                                VALUES (:suit, :card, :number, :symbol, :text, :location, :encounter, :object)", \
+                                    suit=row[0], card=row[1], number=row[2], symbol=row[3], text=row[4], location=row[5], encounter=row[6], object=row[7])
 
-                flash(f"Templates setup sucessfully!")
 
-                return redirect('/admin')
+            # CLASSES
+            with open('static/templates/classes.csv', 'r') as csvfile:
+
+                print('Reading classes.csv...')
+                csv_reader = csv.reader(csvfile)
+
+                print('Creating new database...')
+
+                # classes
+                db.execute("CREATE TABLE IF NOT EXISTS classes ( \
+                    id serial PRIMARY KEY NOT NULL, \
+                    name VARCHAR ( 255 ), \
+                    description VARCHAR ( 255 ) \
+                )")
+                
+                db.execute("DELETE from classes")
+
+                print('Extracting data...')
+
+                # Skips headers
+                next(csv_reader)
+                for row in csv_reader:
+                    
+                    print(f"Adding the {row[0]} class...")
+                    db.execute("INSERT INTO classes (name, description) \
+                                VALUES (:name, :description)", \
+                                name=row[0], description=row[1])
+
+            flash(f"Templates setup sucessfully!")
+
+            return redirect('/admin')
 
         # Setup DB
         if task == 'db_setup':
 
-            # CREATE TABLES
+            # CREATE TABLES #
 
-            # users
-            db.execute("CREATE TABLE IF NOT EXISTS users ( \
-                id serial PRIMARY KEY NOT NULL, \
-                username VARCHAR ( 255 ) UNIQUE NOT NULL, \
-                password VARCHAR ( 255 ) NOT NULL, \
-                created_on TIMESTAMP, \
-                last_login TIMESTAMP, \
-                last_error INTEGER REFERENCES errors (id) \
-                )")
-
-            # cards
-                # "primary action, secondary, tertertiary"
-
-            # characters
-
+            ## ADMIN ##
 
             # errors
             db.execute("CREATE TABLE IF NOT EXISTS errors ( \
@@ -196,6 +189,104 @@ def admin(task):
                 feedback VARCHAR ( 4096 ) \
                 )")
 
+            # users
+            db.execute("CREATE TABLE IF NOT EXISTS users ( \
+                id serial PRIMARY KEY NOT NULL, \
+                username VARCHAR ( 255 ) UNIQUE NOT NULL, \
+                password VARCHAR ( 255 ) NOT NULL, \
+                created_on TIMESTAMP, \
+                last_login TIMESTAMP, \
+                last_error INTEGER REFERENCES errors (id) \
+                )")
+
+
+            ## GAME ##
+
+            # campaigns
+            db.execute("CREATE TABLE IF NOT EXISTS campaigns ( \
+                id serial PRIMARY KEY NOT NULL, \
+                name VARCHAR ( 255 ) \
+            )")
+
+            # parties
+            db.execute("CREATE TABLE IF NOT EXISTS parties ( \
+                id serial PRIMARY KEY NOT NULL, \
+                campaign INTEGER REFERENCES campaigns ( id ), \
+                user_id INTEGER REFERENCES users ( id ) \
+            )")
+
+            # classes
+            db.execute("CREATE TABLE IF NOT EXISTS classes ( \
+                id serial PRIMARY KEY NOT NULL, \
+                name VARCHAR ( 255 ), \
+                description VARCHAR ( 255 ) \
+            )")
+
+            # abilities
+            db.execute("CREATE TABLE IF NOT EXISTS abilities ( \
+                id serial PRIMARY KEY NOT NULL, \
+                name VARCHAR ( 255 ), \
+                description VARCHAR ( 255 ) \
+            )")
+
+            # locations
+            db.execute("CREATE TABLE IF NOT EXISTS locations ( \
+                id serial PRIMARY KEY NOT NULL, \
+                name VARCHAR ( 255 ), \
+                description VARCHAR ( 255 ) \
+            )")
+
+            # encounters
+            db.execute("CREATE TABLE IF NOT EXISTS encounters ( \
+                id serial PRIMARY KEY NOT NULL, \
+                name VARCHAR ( 255 ), \
+                description VARCHAR ( 255 ) \
+            )")
+
+            # objects
+            db.execute("CREATE TABLE IF NOT EXISTS objects ( \
+                id serial PRIMARY KEY NOT NULL, \
+                name VARCHAR ( 255 ), \
+                effect VARCHAR ( 255 ) \
+            )")
+
+            # characters
+            db.execute("CREATE TABLE IF NOT EXISTS characters ( \
+                id serial PRIMARY KEY NOT NULL, \
+                campaign INTEGER REFERENCES campaigns ( id ), \
+                name VARCHAR ( 255 ), \
+                class VARCHAR ( 255 ), \
+                strength VARCHAR ( 255 ), \
+                weakness VARCHAR ( 255 ), \
+                ability_1 INTEGER REFERENCES abilities ( id ), \
+                ability_2 INTEGER REFERENCES abilities ( id ), \
+                ability_3 INTEGER REFERENCES abilities ( id ), \
+                ability_4 INTEGER REFERENCES abilities ( id ), \
+                ao_1 INTEGER REFERENCES objects ( id ), \
+                ao_2 INTEGER REFERENCES objects ( id ), \
+                ao_3 INTEGER REFERENCES objects ( id ) \
+            )")
+
+
+
+    # Characters
+        # id
+        # name
+        # description
+        #         
+
+    # Classes
+        # id
+        # name
+        # description
+        # cantrip
+
+
+    # Abilities (52+2)
+        # id
+        # name
+        # description
+        # pulled/drawn        
 
 
         flash("Tables Setup!")
