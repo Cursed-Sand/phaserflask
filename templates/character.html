@@ -102,9 +102,15 @@ Character |
                     {{ character.strength }}
                     {{ character.weakness }}
                     {{ character.ability_1 }}
-                    {{ character.ability_2 }}
-                    {{ character.ability_3 }}
-                    {{ character.ability_4 }}
+                    {% if character.ability_2 is not none %}
+                        {{ character.ability_2 }}
+                    {% endif %}
+                    {% if character.ability_3 is not none %}
+                        {{ character.ability_3 }}
+                    {% endif %}
+                    {% if character.ability_4 is not none %}
+                        {{ character.ability_4 }}
+                    {% endif %}
                     {{ character.ao_1 }}
                     {{ character.ao_2 }}
                     {{ character.ao_3 }}

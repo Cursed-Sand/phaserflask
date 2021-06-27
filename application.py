@@ -309,7 +309,6 @@ def error():
     return render_template('error.html')
 
 
-
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user"""
