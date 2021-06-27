@@ -29,8 +29,8 @@ def log_error(errcode, errmsg):
 
     db.execute("UPDATE users SET last_error=:error_pk WHERE id=:user_id", error_pk=error_pk, user_id=session['user_id'])
 
-de# Log feedback
-def log_feedback(user_id, feedback):
+# Log feedback
+def log_feedback(feedback):
     last_error = db.execute("SELECT last_error FROM users WHERE id=:user_id", user_id=session['user_id'])
     last_error = last_error[0]['last_error']
 
