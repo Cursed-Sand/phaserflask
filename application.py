@@ -67,23 +67,25 @@ def index():
     if request.method == 'GET':
         username = db.execute("SELECT username FROM users WHERE id=:id", id=session['user_id'])
 
-        friends = db.execute("SELECT username FROM users WHERE id=( \
-                                SELECT inviter FROM friends WHERE accept='true' AND invitee=:id) \
-                                OR id=( \
-                                SELECT invitee FROM friends WHERE accept='true' AND inviter=:id) \
+        friends = db.execute("SELECT username FROM users WHERE \
+                                id=(SELECT inviter FROM friends WHERE accept='true' AND invitee=:id) \
+                                OR \
+                                id=(SELECT invitee FROM friends WHERE accept='true' AND inviter=:id) \
                                 ", id=session['user_id'])
         print(f"friends:{friends}")
 
-        invitations = db.execute("SELECT id, username FROM users WHERE id=( \
-                                SELECT inviter FROM friends WHERE blocked!='true' AND accept='false' AND invitee=:id) \
-                                OR id=( \
-                                SELECT invitee FROM friends WHERE blocked!='true' AND accept='true' AND inviter=:id) \
+        invitations = db.execute("SELECT id, username FROM users WHERE \
+                                id=(SELECT inviter FROM friends WHERE blocked!='true' AND accept='false' AND invitee=:id) \
+                                OR \
+                                id=(SELECT invitee FROM friends WHERE blocked!='true' AND accept='true' AND inviter=:id) \
                                 ", id=session['user_id'])
         print(f"invitations:{invitations}")
 
         print(friends)
 
-        campaigns = db.execute("SELECT * FROM campaigns")
+        campaigns = db.execute("SELECT * FROM campaigns where \
+                                id=(SELECT campaign_id FROM parties WHERE user_id=:id) \
+                                ", id=session['user_id'])
 
         return render_template('index.html', username=username[0], friends=friends, campaigns=campaigns, invitations=invitations)
 
@@ -183,9 +185,21 @@ def admin(task):
                 flash(f"No such username: {friendname}")
                 return redirect("/")
             
+            # Outgoing relationship
             relationship = db.execute("SELECT * FROM friends WHERE inviter=:id AND invitee= \
                                     (SELECT id FROM users WHERE username=:friendname)", id=session['user_id'], friendname=friendname)
             
+            # Incoming relationship
+            inrelationship = db.execute("SELECT * FROM friends WHERE invitee=:id AND inviter= \
+                                    (SELECT id FROM users WHERE username=:friendname)", id=session['user_id'], friendname=friendname)
+
+            # If inviting someone who has already invited you, just accept their request
+            if inrelationship:
+                db.execute("UPDATE friends SET accept='true' AND blocked='false' WHERE id=:friend_id", \
+                                friend_id=inrelationship[0]['id'])
+                flash(f"Accepted existing friend invitation from {friendname}.")
+                return redirect("/")
+
             # Is the inviter already blocked by invitee?
             if relationship[0]['blocked'] is True:
                 # Inviting a user that has blocked inviter returns result as if the invitee does not exist
@@ -208,12 +222,17 @@ def admin(task):
                 flash("Unexpected error.")
                 return redirect ("/")
 
+        # Accept friend
         if task == 'accept_friend':
             return 'test'
 
+        # Block friend
         if task == 'block_friend':
             return 'test'
 
+        # Add campaign
+        if task == 'add_campaign':
+            return 'test'
 
         # Import Templates
         # TODO get file import working
@@ -536,7 +555,7 @@ def login():
         db.execute("UPDATE users SET last_login=:time WHERE id=:id", time=time, id=session["user_id"])
 
         # Redirect user to home page
-        return redirect("/welcome")
+        return redirect("/")
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:

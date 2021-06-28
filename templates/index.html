@@ -7,15 +7,40 @@ Home |
 {% block main %}
 <main>
     <h1>Hi, {{ username.username }}!</h1>
-    <h1>Friends</h1>
-    <ul>
-        <li>foo friend</li>
-        <li>bar friend</li>
+
+    <h1>Friends</h1>  
+
+    <label for="friendlist">Friend List</label>
+    <table id="friendlist">
+        {% if not friends %}
+        <tr>
+            <td>
+                <small>
+                    I'm sure you have friends, but they're not here yet.
+                </small>
+            </td>
+        </tr>
+        {% else %}
         {% for friend in friends %}
-            <li>{{ friend.name }}</li>
+        <tr>
+            <td>
+                { friend.name }}
+            </td>
+        </tr>
         {% endfor %}
-    </ul>
-    <table>
+
+
+    <label for="friendinv">Pending Friend Invitations</label>
+    <table id="friendinv">
+        {% if not invitations %}
+            <tr>
+                <td>
+                    <small>
+                        No pending invitations.
+                    </small>
+                </td>
+            </tr>
+        {% else %}
         {% for invitation in invitations %}
         <tr>
             <td>
@@ -37,32 +62,51 @@ Home |
             </td>
         </tr>
         {% endfor %}
+        {% endif %}
     </table>
-
 
     <form action="/admin/invite_friend" method="post">
         <label for="friendname">Make Friend Request</label>
         <input type="text" id="friendname" name="friendname">
         <input type="submit" value="submit">
     </form>
-
-    <p>
-        TODO add a friend
-    </p>
     
     <h1>Campaigns</h1>
-    <ul>
-        <li>foo campaign</li>
-        <li>bar campaign</li>
-        {% for campaign in campaigns %}
-            <li>{{ campaign.name }}</li>
-        {% endfor %}
-    </ul>
-    <p>
-        TODO add a campaign
-    </p>
-    
 
+    <label for="campaigns">Campaigns I've Joined</label>
+    <table id="campaigns">
+        {% if not campaigns %}
+            <tr>
+                <td>
+                    <small>
+                        No pending campaigns.
+                    </small>
+                </td>
+            </tr>
+        {% else %}
+        {% for campaign in campaigns %}
+        <tr>
+            <td>
+                {{ campaign.username }}
+            </td>
+            <td>
+                <form action="/admin/accept_friend">
+                    <button type="submit" value="{{ campaign.id }}">
+                        Accept
+                    </button>
+                </form>                        
+            </td>
+            <td>
+                <form action="/admin/block_friend">
+                    <button type="submit" value="{{ invitation.id }}">
+                        Block
+                    </button>
+                </form>                        
+            </td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+    </table>
 
 </main>
 {% endblock %}
