@@ -41,12 +41,5 @@ Admin |
         <input type="file" id="myFile" name="filename">
         <input type="submit" disabled>
     </form>
-
-    <h2>Cards</h2>
-        <ul>
-            {% for card in cards %}
-                <li>{{ card.card }} of {{ card.suit }}: {{ card.text }}</li>
-            {% endfor %}
-        </ul>
 </main>
 {% endblock %}

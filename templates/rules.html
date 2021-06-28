@@ -7,12 +7,30 @@ Rules |
 {% block main %}
 <main>
     <h1>How to Play</h1>
+    <a href="/register">
+        <h4>
+            Sign up to get started.
+        </h4>
+    </a>
     
+    <h3>Gameplay</h3>
+    <p>
+        Ivysaur Lorem ipsum dolor sit amet, consectetur adipiscing elit. Venusaur Lorem ipsum dolor sit amet, consectetur adipiscing elit. Charmander Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    </p>
+
     <h3>Objective</h3>
     <p>
-        Placeholder and words on the screen.
+        Bulbasaur Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ivysaur Lorem ipsum dolor sit amet, consectetur adipiscing elit. Venusaur Lorem ipsum dolor sit amet, consectetur adipiscing elit. Charmander Lorem ipsum dolor sit amet, consectetur adipiscing elit. Charmeleon Lorem ipsum dolor sit amet, consectetur adipiscing elit.
     </p>
-    
+
+    <h3>Mechanics</h3>
+    <p>
+        Ivysaur Lorem ipsum dolor sit amet, consectetur adipiscing elit. Venusaur Lorem ipsum dolor sit amet, consectetur adipiscing elit. Charmander Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    </p>
+    <p>
+        Bulbasaur Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ivysaur Lorem ipsum dolor sit amet, consectetur adipiscing elit. Venusaur Lorem ipsum dolor sit amet, consectetur adipiscing elit. Charmander Lorem ipsum dolor sit amet, consectetur adipiscing elit. Charmeleon Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    </p>
+
     <h3>Classes</h3>
     <table>
         {% for class in classes %}
@@ -28,10 +46,19 @@ Rules |
     </table>
 
 
-    <a href="/register">
-        <h4>
-            Sign up to get started.
-        </h4>
-    </a>
+    <h3>Cards</h3>
+    <table>
+        {% for card in cards %}
+            <tr>
+                <td>
+                    {{ card.card }} of {{ card.suit }}
+                </td>
+                <td>
+                    {{ card.text }}
+                </td>                
+            </tr>
+        {% endfor %}
+    </table>
+
 </main>
 {% endblock %}

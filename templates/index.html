@@ -6,6 +6,7 @@ Home |
 
 {% block main %}
 <main>
+    <h1>Hi, {{ username.username }}!</h1>
     <h1>Friends</h1>
     <ul>
         <li>foo friend</li>
@@ -14,6 +15,37 @@ Home |
             <li>{{ friend.name }}</li>
         {% endfor %}
     </ul>
+    <table>
+        {% for invitation in invitations %}
+        <tr>
+            <td>
+                {{ invitation.username }}
+            </td>
+            <td>
+                <form action="/admin/accept_friend">
+                    <button type="submit" value="{{ invitation.id }}">
+                        Accept
+                    </button>
+                </form>                        
+            </td>
+            <td>
+                <form action="/admin/block_friend">
+                    <button type="submit" value="{{ invitation.id }}">
+                        Block
+                    </button>
+                </form>                        
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+
+    <form action="/admin/invite_friend" method="post">
+        <label for="friendname">Make Friend Request</label>
+        <input type="text" id="friendname" name="friendname">
+        <input type="submit" value="submit">
+    </form>
+
     <p>
         TODO add a friend
     </p>

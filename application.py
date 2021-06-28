@@ -72,11 +72,20 @@ def index():
                                 OR id=( \
                                 SELECT invitee FROM friends WHERE accept='true' AND inviter=:id) \
                                 ", id=session['user_id'])
+        print(f"friends:{friends}")
+
+        invitations = db.execute("SELECT id, username FROM users WHERE id=( \
+                                SELECT inviter FROM friends WHERE blocked!='true' AND accept='false' AND invitee=:id) \
+                                OR id=( \
+                                SELECT invitee FROM friends WHERE blocked!='true' AND accept='true' AND inviter=:id) \
+                                ", id=session['user_id'])
+        print(f"invitations:{invitations}")
+
         print(friends)
 
         campaigns = db.execute("SELECT * FROM campaigns")
 
-        return render_template('index.html', username=username, friends=friends, campaigns=campaigns)
+        return render_template('index.html', username=username[0], friends=friends, campaigns=campaigns, invitations=invitations)
 
     else:
 
@@ -88,14 +97,15 @@ def welcome():
 
 @app.route("/rules", methods=['GET'])
 def rules():
-
+    cards = db.execute("SELECT * FROM cards")
     classes = db.execute("SELECT * FROM classes")
-    return render_template('rules.html', classes=classes)
+    return render_template('rules.html', cards=cards, classes=classes)
 
 @app.route("/pregame", methods=['GET'])
 @login_required
 def pregame():
-    return render_template('pregame.html')
+    classes = db.execute("SELECT * FROM classes")
+    return render_template('pregame.html', classes=classes)
 
 @app.route("/game", methods=['GET'])
 @login_required
@@ -159,10 +169,51 @@ def admin(task):
     if request.method == 'GET':
         return render_template('admin.html')
 
-
     # On POST
     else:
         print(f'POST task: {task}')
+
+        # Add friend
+        if task == 'invite_friend':
+            friendname = request.form.get("friendname")
+            match = db.execute("SELECT id, username FROM users WHERE username=:friendname", friendname=friendname)
+
+            # Ensure invited user exists
+            if not match:
+                flash(f"No such username: {friendname}")
+                return redirect("/")
+            
+            relationship = db.execute("SELECT * FROM friends WHERE inviter=:id AND invitee= \
+                                    (SELECT id FROM users WHERE username=:friendname)", id=session['user_id'], friendname=friendname)
+            
+            # Is the inviter already blocked by invitee?
+            if relationship[0]['blocked'] is True:
+                # Inviting a user that has blocked inviter returns result as if the invitee does not exist
+                flash(f"No such username: {friendname}")
+                return redirect("/")
+
+            # Prevent duplicate invitations
+            if len(relationship) > 0:
+                flash(f"Invitation already sent to {friendname}.")
+                return redirect ("/")
+
+            # Add the invitation
+            if len(relationship) == 0:
+                db.execute("INSERT INTO friends (inviter, invitee, accept) VALUES (:id, :invitee, 'false')", \
+                            id=session['user_id'], invitee=match[0]['id'])
+                flash(f"Invitation has been sent to {friendname}.")
+                return redirect ("/")
+
+            else:
+                flash("Unexpected error.")
+                return redirect ("/")
+
+        if task == 'accept_friend':
+            return 'test'
+
+        if task == 'block_friend':
+            return 'test'
+
 
         # Import Templates
         # TODO get file import working

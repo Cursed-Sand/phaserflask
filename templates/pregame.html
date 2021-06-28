@@ -17,12 +17,15 @@ Pregame |
                     </li>
                     <li>
                         Choose your character:
+                        <!-- TODO give route -->
                         <form>
                             <select name="character" id="id">
+                                {% for class in classes %}
                                 <!-- for class in classes -->
-                                    <option value="foo">
-                                        foo
+                                    <option value="{{ class.id }}" title="{{ class.description }}">
+                                        {{ class.name }}
                                     </option>
+                                {% endfor %}
                             </select>
                             <button type="submit">
                                 Choose Class
