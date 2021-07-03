@@ -5,124 +5,119 @@ Character |
 {% endblock %}
 
 {% block main %}
-    <main>
+    <main class="game_nav">
         <form action="/character" method="post">
-            <ul class="flex-outer">
-            <li>
+            
+            <div class="descriptors">
                 <label for="name">Character Name</label>
                 <input type="text" name="name" id="name" placeholder="Enter character name.">
-            </li>
-            <li>
+            </div>
+            
+        
+            <div class="descriptors">
                 <label for="class">Character Class</label>
                 <input type="text" name="class" id="class" placeholder="Enter character class.">
-            </li>
-            <li>
+            </div>
+            
+            
+            <div class="descriptors">
                 <label for="strength">Strength</label>
                 <input type="text" name="strength" id="strength" placeholder="Character strengths.">
-            </li>
-            <li>
+            </div>    
+            
+            <div class="descriptors">    
                 <label for="weakness">Weakness</label>
                 <input type="text" name="weakness" id="weakness" placeholder="Character weaknesses.">
-            </li>
-            <li>
+            </div>    
+
+            </div>
+
+            <div class="ao_slot">
+                <p>Level</p>
+                <ul>
+                    <label for="lvl_1">Level 1</label>
+                    <input type="checkbox" id="lvl_1" name="lvl_1">
+                    <label for="lvl_2">Level 2</label>
+                    <input type="checkbox" id="lvl_2" name="lvl_2">                        
+                    <label for="lvl_3">Level 3</label>
+                    <input type="checkbox" id="lvl_3" name="lvl_3">                        
+                    <label for="lvl_4">Level 4</label>
+                    <input type="checkbox" id="lvl_4" name="lvl_4">
+                </ul>
+            </div>
+            <div class="ao_slot">
+                <p>HP</p>
+                <ul>
+                        <label for="lvl_1">Level 1</label>
+                        <input type="checkbox" id="hp">
+                        <label for="lvl_2">Level 2</label>
+                        <input type="checkbox" id="hp">
+                        <input type="checkbox" id="hp">
+                        <label for="lvl_3">Level 3</label>
+                        <input type="checkbox" id="hp">
+                        <input type="checkbox" id="hp">
+                        <input type="checkbox" id="hp">
+                        <label for="lvl_4">Level 4</label> 
+                        <input type="checkbox" id="hp">
+                        <input type="checkbox" id="hp">
+                        <input type="checkbox" id="hp">
+                        <input type="checkbox" id="hp">
+                                             
+                </ul>
+            </div>
+
+            <div class="ao_slot" style="align-self: flex-end;">
                 <label for="ao_1">Altered Object 1</label>
                 <textarea rows="" name="ao_1" id="ao_1" placeholder="Altered Object 1"></textarea>
-            </li>
-            <li>
+            </div>
+
+            <div class="ao_slot" style="align-self: flex-end;">
                 <label for="ao_2">Altered Object 2</label>
                 <textarea rows="" name="ao_2" id="ao_2" placeholder="Altered Object 2"></textarea>
-            </li>
-            <li>
+            </div>
+
+            <div class="ao_slot" style="align-self: flex-end;">
                 <label for="ao_3">Altered Object 3</label>
                 <textarea rows="" name="ao_3" id="ao_3" placeholder="Altered Object 3"></textarea>
-            </li>
-            <li>
-                <p>Level</p>
-                <ul class="flex-inner">
-                    <ul class="flex-inner">
-                        <li>
-                            <label for="lvl_1">Level 1</label>
-                            <input type="checkbox" id="lvl_1" name="lvl_1">
-                        </li>
-                            <label for="lvl_2">Level 1</label>
-                            <input type="checkbox" id="lvl_2" name="lvl_2">
-                        </li>
-                            <label for="lvl_3">Level 1</label>
-                            <input type="checkbox" id="lvl_3" name="lvl_3">
-                        </li>
-                            <label for="lvl_4">Level 1</label>
-                            <input type="checkbox" id="lvl_4" name="lvl_4">
-                        </li>
-                    </ul>
-                </ul>
-            </li>
-            <li>
-                <p>HP</p>
-                <ul class="flex-inner">
-                    <ul class="flex-inner">
-                        <li>
-                          <input type="checkbox" id="hp">
-                          <label for="lvl_1">Level 1</label>
-                        </li>
-                        <li>
-                            <input type="checkbox" id="hp">
-                            <input type="checkbox" id="hp">
-                            <label for="lvl_2">Level 2</label>
-                        </li>
-                        <li>
-                            <input type="checkbox" id="hp">
-                            <input type="checkbox" id="hp">
-                            <input type="checkbox" id="hp">
-                            <label for="lvl_3">Level 3</label>
-                        </li>
-                        <li>
-                            <input type="checkbox" id="hp">
-                            <input type="checkbox" id="hp">
-                            <input type="checkbox" id="hp">
-                            <input type="checkbox" id="hp">
-                            <label for="lvl_4">Level 4</label>
-                        </li>        
-                    </ul>                
-                </ul>
-            </li>
-            <li>
+            </div>
+
+            <div>
                 <button type="submit">Submit</button>
-            </li>
+            </div>
             </ul>
         </form>
 
-        <h4>Characters</h4>
-        <h5>Choose a Class</h5>        
-        <select>
-            {% for class in classes %}
-            <option>{{ class.name }} - {{ class.description }}</option>
-            {% endfor %}
-        </select>
-
-        <ul>
-            {% for character in characters %}
-                <li>
-                    <h6>
-                        {{ character.name }}
-                    </h6>
-                    {{ character.class }}
-                    {{ character.strength }}
-                    {{ character.weakness }}
-                    {{ character.ability_1 }}
-                    {% if character.ability_2 is not none %}
-                        {{ character.ability_2 }}
-                    {% endif %}
-                    {% if character.ability_3 is not none %}
-                        {{ character.ability_3 }}
-                    {% endif %}
-                    {% if character.ability_4 is not none %}
-                        {{ character.ability_4 }}
-                    {% endif %}
-                    {{ character.ao_1 }}
-                    {{ character.ao_2 }}
-                    {{ character.ao_3 }}
-                </li>
-            {% endfor %}
-        </ul>
+            <select name="Choose a character" class="descriptors">
+                {% for class in classes %}
+                <option>{{ class.name }} - {{ class.description }}</option>
+                {% endfor %}
+            </select>
+            
+            <ul class="descriptors">
+                {% for character in characters %}
+                    <li>
+                        <h6>
+                            {{ character.name }}
+                        </h6>
+                        {{ character.class }}
+                        {{ character.strength }}
+                        {{ character.weakness }}
+                        {{ character.ability_1 }}
+                        {% if character.ability_2 is not none %}
+                            {{ character.ability_2 }}
+                        {% endif %}
+                        {% if character.ability_3 is not none %}
+                            {{ character.ability_3 }}
+                        {% endif %}
+                        {% if character.ability_4 is not none %}
+                            {{ character.ability_4 }}
+                        {% endif %}
+                        {{ character.ao_1 }}
+                        {{ character.ao_2 }}
+                        {{ character.ao_3 }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>    
 </main>
 {% endblock %}

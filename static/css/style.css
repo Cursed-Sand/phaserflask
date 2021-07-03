@@ -134,6 +134,39 @@ footer {
   transform: rotate(90deg);
 }
 
+.game_nav {
+  display:flex;
+  flex-flow: wrap;
+  justify-content: space-evenly;
+  padding: 1rem;
+  border-style: groove;
+  border-radius: 20px;
+  background-color: #576e75;
+  text-decoration-color: #e4e4e4;
+  transition: var(--transition-speed);
+}
+
+.ao_slot {
+  padding: 5px;
+  flex-basis: auto;
+  border: #df49a6;
+  border-style: solid;
+  border-radius: 25px;
+  background-color: #9d8ad1;
+  margin: 1rem;
+}
+
+.descriptors {
+  flex-basis: auto;
+  text-decoration-color: #b6b6b6;
+  padding: 5px;
+  border: #df49a6;
+  border-style: solid;
+  border-radius: 25px;
+  background-color: #9d8ad1;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
 /* Small screens */
 @media only screen and (max-width: 600px) {
   .navbar {
